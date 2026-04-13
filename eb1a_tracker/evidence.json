@@ -1,0 +1,68 @@
+{
+  "evidence": [
+    {
+      "criterion": "published_work",
+      "title": "LinkedIn 'Building in Public' Series",
+      "description": "30+ daily posts covering identity resolution, data platforms, privacy, retail media, and product leadership. Demonstrates thought leadership and original analysis in the identity/adtech domain.",
+      "url": "",
+      "evidence_type": "article_series",
+      "date_added": "2026-04-13",
+      "status": "active"
+    },
+    {
+      "criterion": "published_work",
+      "title": "Medium Articles on Identity and Product Management",
+      "description": "Long-form articles including identity maturity model framework and product strategy analysis. Published on Medium with professional readership.",
+      "url": "",
+      "evidence_type": "article",
+      "date_added": "2026-04-13",
+      "status": "active"
+    },
+    {
+      "criterion": "judging",
+      "title": "Topmate Product Mentorship",
+      "description": "Evaluating product cases, reviewing portfolios, and mentoring aspiring product managers. Demonstrates recognition as an expert whose judgment is sought by others in the field.",
+      "url": "",
+      "evidence_type": "mentorship",
+      "date_added": "2026-04-13",
+      "status": "active"
+    },
+    {
+      "criterion": "original_contributions",
+      "title": "Identity Resolution Platform at Walmart Global Tech",
+      "description": "Built identity graph processing 22M+ records, driving $15M+ incremental ad revenue and $5.8M cost savings. Original contribution to retail media identity infrastructure.",
+      "url": "",
+      "evidence_type": "product",
+      "date_added": "2026-04-13",
+      "status": "active"
+    },
+    {
+      "criterion": "original_contributions",
+      "title": "YouTube Content on Product and Identity",
+      "description": "Original video content covering identity resolution, product management frameworks, and technical product leadership. Contributes to industry knowledge base.",
+      "url": "",
+      "evidence_type": "video",
+      "date_added": "2026-04-13",
+      "status": "active"
+    },
+    {
+      "criterion": "leading_role",
+      "title": "Senior PM, Identity Resolution at Walmart Global Tech",
+      "description": "Leading identity resolution and data platform products for one of the world's largest retailers. Responsible for 32M+ record identity graph powering the retail media network.",
+      "url": "",
+      "evidence_type": "role",
+      "date_added": "2026-04-13",
+      "status": "active"
+    },
+    {
+      "criterion": "high_salary",
+      "title": "Senior PM Compensation at Walmart Global Tech",
+      "description": "Compensation significantly above median for product managers nationally, evidencing high remuneration in the field.",
+      "url": "",
+      "evidence_type": "compensation",
+      "date_added": "2026-04-13",
+      "status": "active"
+    }
+  ],
+  "last_updated": "2026-04-13"
+}

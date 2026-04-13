@@ -1,0 +1,23 @@
+[
+  {
+    "role": "Staff Product Manager, Identity Platform",
+    "company": "Google",
+    "contact": "Jane Doe",
+    "angle": "identity and authentication platform",
+    "type": "external"
+  },
+  {
+    "role": "Senior PM, Identity Resolution",
+    "company": "LiveRamp",
+    "contact": "John Smith",
+    "angle": "identity resolution and data connectivity",
+    "type": "external"
+  },
+  {
+    "role": "Senior PM, Data Platform",
+    "company": "The Trade Desk",
+    "contact": "Alex Johnson",
+    "angle": "programmatic advertising data infrastructure",
+    "type": "internal"
+  }
+]
