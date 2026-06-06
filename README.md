@@ -1,5 +1,9 @@
 # Productivity Toolkit
 
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Anthropic SDK](https://img.shields.io/badge/Anthropic-Claude_API-cc785c.svg)](https://docs.anthropic.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 Seven CLI tools powered by the Claude API to accelerate career development, content creation, and financial planning.
 
 ## Tools
