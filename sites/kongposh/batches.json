@@ -1,0 +1,32 @@
+{
+  "note": "Demonstration batch records for the pre-launch provenance flow. Replace with live lot data at first harvest.",
+  "batches": [
+    {
+      "id": "KP-25-LTP-01",
+      "harvestWindow": "28 October – 9 November 2025",
+      "village": "Lethpora, Pampore tehsil, Pulwama",
+      "grade": "ISO 3632 Category I",
+      "crocin": "234.6 (E1% 257 nm)",
+      "labTestDate": "12 December 2025",
+      "lab": "Independent laboratory — TODO: insert accredited lab name and report number"
+    },
+    {
+      "id": "KP-25-CHD-02",
+      "harvestWindow": "30 October – 11 November 2025",
+      "village": "Chandhara, Pampore tehsil, Pulwama",
+      "grade": "ISO 3632 Category I",
+      "crocin": "241.2 (E1% 257 nm)",
+      "labTestDate": "15 December 2025",
+      "lab": "Independent laboratory — TODO: insert accredited lab name and report number"
+    },
+    {
+      "id": "KP-25-KHR-03",
+      "harvestWindow": "2 – 13 November 2025",
+      "village": "Khrew, Pampore belt, Pulwama",
+      "grade": "ISO 3632 Category I",
+      "crocin": "226.8 (E1% 257 nm)",
+      "labTestDate": "18 December 2025",
+      "lab": "Independent laboratory — TODO: insert accredited lab name and report number"
+    }
+  ]
+}

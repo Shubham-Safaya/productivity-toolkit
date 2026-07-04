@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify a batch — Kong Posh Kashmir saffron</title>
+  <meta name="description" content="Verify a Kong Posh saffron batch: harvest window, Pampore village of origin, ISO 3632 grade, crocin value, and lab test date.">
+  <meta property="og:title" content="Kong Posh — batch verification">
+  <meta property="og:description" content="Every Kong Posh tin resolves to a batch record. Check yours.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://shubham-safaya.github.io/kongposh/verify.html">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23241736'/%3E%3Cpath d='M16 26 V14 M16 15 C13 12 11 9 11 6 M16 15 C16 11.5 16 9 16 6 M16 15 C19 12 21 9 21 6' stroke='%23A61C2B' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='6' r='1.6' fill='%23D99A2B'/%3E%3Ccircle cx='16' cy='5.4' r='1.6' fill='%23D99A2B'/%3E%3Ccircle cx='21' cy='6' r='1.6' fill='%23D99A2B'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html" aria-label="Kong Posh home">
+    <svg class="brand-mark" viewBox="0 0 32 32" width="34" height="34" role="img" aria-label="Kong Posh three-stigma mark">
+      <path d="M6 27 C6 20 10 15 16 13 C22 15 26 20 26 27 Z" fill="none" stroke="var(--crocus-violet)" stroke-width="1.6"/>
+      <path d="M16 24 V13 M16 14 C13 11 11 8 11 5 M16 14 C16 10.5 16 8 16 5 M16 14 C19 11 21 8 21 5" stroke="var(--stigma-crimson)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <circle cx="11" cy="5" r="1.5" fill="var(--saffron-gold)"/>
+      <circle cx="16" cy="4.4" r="1.5" fill="var(--saffron-gold)"/>
+      <circle cx="21" cy="5" r="1.5" fill="var(--saffron-gold)"/>
+    </svg>
+    <span class="brand-name" data-brand>Kong Posh</span>
+  </a>
+  <nav aria-label="Primary">
+    <a href="index.html#proof">Provenance</a>
+    <a href="index.html#origin">Origin</a>
+    <a class="nav-cta" href="index.html#waitlist">Waitlist</a>
+  </nav>
+</header>
+
+<main class="verify-main">
+  <div class="verify-intro">
+    <h1>Batch verification</h1>
+    <p>Every <span data-brand>Kong Posh</span> tin carries a batch number. Its record lives here.</p>
+  </div>
+
+  <div id="verify-root" aria-live="polite">
+    <noscript><p>Batch lookup requires JavaScript. For manual verification, write to <a href="mailto:safayashubham@gmail.com">safayashubham@gmail.com</a> with your batch number.</p></noscript>
+  </div>
+
+  <p class="sample-links">Sample records:
+    <a href="verify.html?batch=KP-25-LTP-01">KP-25-LTP-01</a>
+    <a href="verify.html?batch=KP-25-CHD-02">KP-25-CHD-02</a>
+    <a href="verify.html?batch=KP-25-KHR-03">KP-25-KHR-03</a>
+  </p>
+</main>
+
+<footer class="site-footer">
+  <p><span data-brand>Kong Posh</span> · saffron of the Valley, signed at source</p>
+  <p class="fine">© <span id="year"></span> <span data-brand>Kong Posh</span>. All rights reserved.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
