@@ -13,13 +13,11 @@ Usage:
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
+from toolkit import config
+from toolkit.client import complete_json, handle_errors
 
 PROFILE = {
     "name": "Shubham Safaya",
@@ -72,41 +70,39 @@ Shubham""",
 }
 
 
+ANGLE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "angle_paragraph": {
+            "type": "string",
+            "description": "2-sentence paragraph connecting the background to this opportunity",
+        },
+        "angle_sentence": {
+            "type": "string",
+            "description": "1-sentence version of the same connection, for LinkedIn DMs",
+        },
+    },
+    "required": ["angle_paragraph", "angle_sentence"],
+    "additionalProperties": False,
+}
+
+
 def generate_angle(role: str, company: str, angle: str) -> dict:
     """Generate angle-specific paragraphs. Uses AI if available, falls back to templates."""
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-
-    if api_key:
+    if config.get_api_key():
         try:
-            import anthropic
-            client = anthropic.Anthropic(api_key=api_key)
-
-            message = client.messages.create(
-                model="claude-sonnet-4-20250514",
-                max_tokens=512,
-                messages=[{
-                    "role": "user",
-                    "content": f"""Generate two things for a job outreach message:
+            return complete_json(
+                f"""Generate two things for a job outreach message:
 
 1. A 2-sentence "angle paragraph" connecting Shubham Safaya's background (identity resolution, data platforms, 22M+ identity records, $15M+ ad revenue at Walmart Global Tech) to this specific opportunity.
 2. A 1-sentence "angle sentence" version of the same connection (for LinkedIn DMs).
 
 Role: {role}
 Company: {company}
-Team/domain angle: {angle}
-
-Return JSON: {{"angle_paragraph": "...", "angle_sentence": "..."}}
-Return ONLY the JSON."""
-                }]
+Team/domain angle: {angle}""",
+                schema=ANGLE_SCHEMA,
+                max_tokens=2048,
             )
-
-            text = message.content[0].text.strip()
-            if "```" in text:
-                text = text.split("```")[1]
-                if text.startswith("json"):
-                    text = text[4:]
-                text = text.strip()
-            return json.loads(text)
         except Exception:
             pass
 
@@ -169,7 +165,8 @@ def generate_batch(contacts_file: str, output_dir: str | None = None) -> list[di
     return all_results
 
 
-def main():
+@handle_errors
+def main(argv: list[str] | None = None):
     parser = argparse.ArgumentParser(description="Generate job outreach messages")
     parser.add_argument("--role", type=str, help="Job title")
     parser.add_argument("--company", type=str, help="Company name")
@@ -179,7 +176,7 @@ def main():
                         help="Message type: external (cold), internal (referral), or all")
     parser.add_argument("--batch", type=str, help="JSON file with multiple contacts for batch generation")
     parser.add_argument("--output", type=str, help="Output directory")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.batch:
         results = generate_batch(args.batch, args.output)

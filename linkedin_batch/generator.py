@@ -12,13 +12,10 @@ Usage:
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
+from toolkit.client import complete, handle_errors
 
 VOICE_PROMPT = """You are ghostwriting LinkedIn posts for Shubham Safaya, a Senior Product Manager at Walmart Global Tech who leads identity resolution and data platform products.
 
@@ -38,35 +35,21 @@ Writing style rules (CRITICAL — violating any of these means the draft is unus
 
 
 def generate_batch(topics: list[str], start_day: int, output_dir: str | None = None) -> list[dict]:
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        print("Error: ANTHROPIC_API_KEY not set. Add it to .env or export it.")
-        sys.exit(1)
-
-    import anthropic
-    client = anthropic.Anthropic(api_key=api_key)
-
     posts = []
     for i, topic in enumerate(topics):
         day_num = start_day + i
         print(f"Generating Day {day_num}: {topic}...")
 
-        message = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=1024,
-            messages=[{
-                "role": "user",
-                "content": f"""{VOICE_PROMPT}
-
-Write a LinkedIn post for Day {day_num} of the "building in public" series.
+        post_text = complete(
+            f"""Write a LinkedIn post for Day {day_num} of the "building in public" series.
 
 Topic: {topic}
 
-Return ONLY the post text, ready to copy-paste into LinkedIn. Nothing else."""
-            }]
+Return ONLY the post text, ready to copy-paste into LinkedIn. Nothing else.""",
+            system=VOICE_PROMPT,
+            max_tokens=4096,
         )
 
-        post_text = message.content[0].text.strip()
         posts.append({
             "day": day_num,
             "topic": topic,
@@ -95,13 +78,14 @@ Return ONLY the post text, ready to copy-paste into LinkedIn. Nothing else."""
     return posts
 
 
-def main():
+@handle_errors
+def main(argv: list[str] | None = None):
     parser = argparse.ArgumentParser(description="Batch-generate LinkedIn 'Day X' posts")
     parser.add_argument("--start-day", type=int, required=True, help="Starting day number")
     parser.add_argument("--topics", type=str, help="Comma-separated list of topics")
     parser.add_argument("--topics-file", type=str, help="File with one topic per line")
     parser.add_argument("--output", type=str, help="Output directory (prints to stdout if omitted)")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.topics_file:
         topics = [line.strip() for line in Path(args.topics_file).read_text().splitlines() if line.strip()]

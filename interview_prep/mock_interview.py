@@ -13,13 +13,9 @@ Usage:
 """
 
 import argparse
-import json
-import os
 import sys
 
-from dotenv import load_dotenv
-
-load_dotenv()
+from toolkit.client import complete, handle_errors
 
 QUESTION_BANKS = {
     "behavioral": [
@@ -87,23 +83,12 @@ REWRITTEN ANSWER: [Optional — if the answer was below 7/10, show a stronger ve
 Be direct and specific. Don't pad with compliments. The candidate is a senior PM who wants real feedback."""
 
 
-def get_client():
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        print("Error: ANTHROPIC_API_KEY not set.")
-        sys.exit(1)
-    import anthropic
-    return anthropic.Anthropic(api_key=api_key)
-
-
 def run_interactive(interview_type: str, num_questions: int, role: str, company: str):
     import random
 
     questions = QUESTION_BANKS.get(interview_type, QUESTION_BANKS["behavioral"])
     selected = random.sample(questions, min(num_questions, len(questions)))
     company_context = f" at {company}" if company else ""
-
-    client = get_client()
 
     print(f"\n{'='*60}")
     print(f"  MOCK INTERVIEW — {interview_type.upper()}")
@@ -153,16 +138,11 @@ def run_interactive(interview_type: str, num_questions: int, role: str, company:
             company_context=company_context,
         )
 
-        message = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=1500,
+        feedback = complete(
+            f"Question: {question}\n\nCandidate's answer:\n{answer}",
             system=system,
-            messages=[
-                {"role": "user", "content": f"Question: {question}\n\nCandidate's answer:\n{answer}"},
-            ],
+            max_tokens=4096,
         )
-
-        feedback = message.content[0].text.strip()
         print(f"\n{feedback}")
         results.append({
             "question": question,
@@ -177,23 +157,18 @@ def run_interactive(interview_type: str, num_questions: int, role: str, company:
 
 
 def review_single(question: str, answer: str, role: str = "Staff PM"):
-    client = get_client()
     system = INTERVIEWER_SYSTEM.format(
         interview_type="behavioral",
         role=role,
         company_context="",
     )
 
-    message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=1500,
+    feedback = complete(
+        f"Question: {question}\n\nCandidate's answer:\n{answer}",
         system=system,
-        messages=[
-            {"role": "user", "content": f"Question: {question}\n\nCandidate's answer:\n{answer}"},
-        ],
+        max_tokens=4096,
     )
-
-    print(message.content[0].text.strip())
+    print(feedback)
 
 
 def list_questions(interview_type: str | None = None):
@@ -206,7 +181,8 @@ def list_questions(interview_type: str | None = None):
             print(f"  {i}. {q}")
 
 
-def main():
+@handle_errors
+def main(argv: list[str] | None = None):
     parser = argparse.ArgumentParser(description="PM Mock Interview System")
     parser.add_argument("--type", type=str, default="behavioral",
                         choices=["behavioral", "product_sense", "strategy", "technical"],
@@ -217,7 +193,7 @@ def main():
     parser.add_argument("--review-answer", type=str, help="Review a single answer (non-interactive)")
     parser.add_argument("--question", type=str, help="The question for --review-answer")
     parser.add_argument("--list", action="store_true", help="List available questions")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.list:
         list_questions(args.type)

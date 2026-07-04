@@ -12,13 +12,10 @@ Usage:
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
+from toolkit.client import complete, handle_errors
 
 FORMAT_PROMPTS = {
     "linkedin": """Convert this into a LinkedIn post for Shubham Safaya (Senior PM, identity/data platforms at Walmart Global Tech).
@@ -74,14 +71,6 @@ Rules:
 
 
 def repurpose(content: str, formats: list[str]) -> dict:
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        print("Error: ANTHROPIC_API_KEY not set.")
-        sys.exit(1)
-
-    import anthropic
-    client = anthropic.Anthropic(api_key=api_key)
-
     results = {}
     for fmt in formats:
         if fmt not in FORMAT_PROMPTS:
@@ -89,33 +78,27 @@ def repurpose(content: str, formats: list[str]) -> dict:
             continue
 
         print(f"  Generating {fmt}...")
-        message = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=2000,
-            messages=[{
-                "role": "user",
-                "content": f"""{FORMAT_PROMPTS[fmt]}
-
-SOURCE CONTENT:
+        results[fmt] = complete(
+            f"""SOURCE CONTENT:
 {content}
 
-Return ONLY the formatted content, ready to post. No meta-commentary."""
-            }]
+Return ONLY the formatted content, ready to post. No meta-commentary.""",
+            system=FORMAT_PROMPTS[fmt],
+            max_tokens=4096,
         )
-
-        results[fmt] = message.content[0].text.strip()
 
     return results
 
 
-def main():
+@handle_errors
+def main(argv: list[str] | None = None):
     parser = argparse.ArgumentParser(description="Content Repurposing Engine")
     parser.add_argument("--idea", type=str, help="Raw idea or take to repurpose")
     parser.add_argument("--input", type=str, help="Text file with source content")
     parser.add_argument("--formats", type=str, default="linkedin,medium,youtube,instagram",
                         help="Comma-separated output formats: linkedin,medium,youtube,instagram,twitter_thread")
     parser.add_argument("--output", type=str, help="Output directory (prints to stdout if omitted)")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.input:
         content = Path(args.input).read_text().strip()

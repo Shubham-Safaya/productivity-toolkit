@@ -11,14 +11,10 @@ Usage:
 """
 
 import argparse
-import json
-import os
 import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
+from toolkit.client import complete, handle_errors
 
 VOICE_PROMPT = """You are ghostwriting a Medium article for Shubham Safaya, a Senior Product Manager at Walmart Global Tech who leads identity resolution and data platform products.
 
@@ -40,24 +36,10 @@ Writing style rules (CRITICAL):
 
 
 def generate_draft(thesis: str, points: list[str], audience: str = "product managers and data practitioners") -> str:
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        print("Error: ANTHROPIC_API_KEY not set.")
-        sys.exit(1)
-
-    import anthropic
-    client = anthropic.Anthropic(api_key=api_key)
-
     points_text = "\n".join(f"- {p}" for p in points)
 
-    message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=4096,
-        messages=[{
-            "role": "user",
-            "content": f"""{VOICE_PROMPT}
-
-Write a Medium article based on:
+    return complete(
+        f"""Write a Medium article based on:
 
 THESIS: {thesis}
 
@@ -68,11 +50,10 @@ TARGET AUDIENCE: {audience}
 
 Return the complete article in Markdown format, starting with the title as an H1.
 Include a suggested subtitle after the title.
-Do not include any meta-commentary — just the article itself."""
-        }]
+Do not include any meta-commentary — just the article itself.""",
+        system=VOICE_PROMPT,
+        max_tokens=8192,
     )
-
-    return message.content[0].text.strip()
 
 
 def interactive_mode():
@@ -113,7 +94,8 @@ def interactive_mode():
         print(f"Saved to: {save}")
 
 
-def main():
+@handle_errors
+def main(argv: list[str] | None = None):
     parser = argparse.ArgumentParser(description="Medium Article Draft Generator")
     parser.add_argument("--thesis", type=str, help="Core thesis/argument")
     parser.add_argument("--points", type=str, help="Comma-separated key points")
@@ -121,7 +103,7 @@ def main():
     parser.add_argument("--brief", type=str, help="Text file with thesis on line 1, points on subsequent lines")
     parser.add_argument("--output", type=str, help="Output file path")
     parser.add_argument("--interactive", action="store_true", help="Interactive mode")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.interactive:
         interactive_mode()
