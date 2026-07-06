@@ -112,6 +112,8 @@ main { position: relative; z-index: 1; }
 .card-tag { font-size: 0.7rem; letter-spacing: 0.18em; color: var(--madder); margin-bottom: 0.8rem; }
 .card h3 { font-size: 1.1rem; margin-bottom: 0.55rem; }
 .card p { color: var(--steel); font-size: 0.94rem; }
+.cite { display: block; margin-top: 0.7rem; font-size: 0.72rem; color: var(--steel); text-decoration: underline; text-underline-offset: 3px; }
+.cite:hover, .cite:focus { color: var(--bone); }
 
 /* Product */
 .status-line { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em; color: var(--steel); margin-bottom: 1.6rem; text-transform: uppercase; }

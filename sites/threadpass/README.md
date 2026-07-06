@@ -10,8 +10,8 @@ Pure static site: `index.html`, `styles.css`, `app.js`. No build step, no framew
 
 - [ ] Replace `FORM_ID_B` in `index.html` with a real Formspree form ID
 - [ ] Swap `safayashubham@gmail.com` for a brand mailbox (in `app.js` and `index.html`)
-- [ ] Add citation links for the ESPR/DPP textile timeline and CBP UFLPA statistics (TODO markers in `index.html`)
-- [ ] Run a name and trademark search for "ThreadPass"
+- [x] Add citation links for the ESPR/DPP textile timeline and CBP UFLPA statistics (EC Green Forum + CBP dashboard, 2026-07-06)
+- [x] Knockout search 2026-07-06: no existing "ThreadPass" in textile/traceability found (informal check, not legal clearance)
 
 ## Reskin
 
