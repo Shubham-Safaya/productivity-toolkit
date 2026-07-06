@@ -118,9 +118,16 @@ def complete_json(
     max_tokens: int = 4096,
 ) -> dict:
     """Structured-output request: returns the parsed JSON object."""
-    return json.loads(
-        complete(prompt, system=system, max_tokens=max_tokens, schema=schema)
-    )
+    text = complete(prompt, system=system, max_tokens=max_tokens, schema=schema)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        # structured outputs guarantee valid JSON unless the response was
+        # truncated at max_tokens
+        raise ToolkitError(
+            "The API returned invalid JSON (likely truncated at max_tokens). "
+            "Retry, or raise the tool's max_tokens."
+        ) from None
 
 
 def handle_errors(fn):
@@ -132,6 +139,14 @@ def handle_errors(fn):
             return fn(*args, **kwargs)
         except ToolkitError as e:
             print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
+        except OSError as e:
+            # expected failure: bad --topics-file/--brief/--batch/--portfolio path
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
+        except json.JSONDecodeError as e:
+            # expected failure: malformed user-supplied JSON input file
+            print(f"Error: invalid JSON input — {e}", file=sys.stderr)
             sys.exit(1)
 
     return wrapper

@@ -111,6 +111,9 @@ def main(argv: list[str] | None = None):
 
     if args.brief:
         lines = [l.strip() for l in Path(args.brief).read_text().splitlines() if l.strip()]
+        if not lines:
+            print(f"Error: brief file {args.brief} is empty", file=sys.stderr)
+            sys.exit(1)
         thesis = lines[0]
         points = lines[1:]
     elif args.thesis and args.points:
