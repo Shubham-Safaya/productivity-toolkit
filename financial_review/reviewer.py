@@ -12,13 +12,10 @@ Usage:
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
+from toolkit.client import complete, handle_errors
 
 SAMPLE_PORTFOLIO = {
     "holdings": [
@@ -55,23 +52,10 @@ IMPORTANT: You are not a licensed financial advisor. Always note that this is an
 
 
 def analyze_portfolio(portfolio: dict, focus: str = "") -> str:
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        print("Error: ANTHROPIC_API_KEY not set.")
-        sys.exit(1)
-
-    import anthropic
-    client = anthropic.Anthropic(api_key=api_key)
-
     focus_text = f"\nFocus area: {focus}" if focus else ""
 
-    message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=3000,
-        system=REVIEW_SYSTEM,
-        messages=[{
-            "role": "user",
-            "content": f"""Review this portfolio:{focus_text}
+    return complete(
+        f"""Review this portfolio:{focus_text}
 
 {json.dumps(portfolio, indent=2)}
 
@@ -80,11 +64,10 @@ Provide:
 2. CONCENTRATION RISK — any holdings or sectors that are overweight
 3. REBALANCING SUGGESTIONS — specific moves based on the data
 4. NRI TAX CONSIDERATIONS — relevant tax implications for US-resident NRI
-5. ACTION ITEMS — 3-5 specific next steps, prioritized"""
-        }]
+5. ACTION ITEMS — 3-5 specific next steps, prioritized""",
+        system=REVIEW_SYSTEM,
+        max_tokens=8192,
     )
-
-    return message.content[0].text.strip()
 
 
 def interactive_mode():
@@ -132,13 +115,14 @@ def interactive_mode():
     print(f"\n{result}")
 
 
-def main():
+@handle_errors
+def main(argv: list[str] | None = None):
     parser = argparse.ArgumentParser(description="Financial Portfolio Review")
     parser.add_argument("--portfolio", type=str, help="JSON file with portfolio data")
     parser.add_argument("--focus", type=str, default="", help="Focus area: rebalancing, tax, risk, all")
     parser.add_argument("--interactive", action="store_true", help="Interactive mode")
     parser.add_argument("--sample", action="store_true", help="Show sample portfolio format")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.sample:
         print(json.dumps(SAMPLE_PORTFOLIO, indent=2))

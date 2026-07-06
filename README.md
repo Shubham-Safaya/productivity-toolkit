@@ -1,6 +1,6 @@
 # Productivity Toolkit
 
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![Anthropic SDK](https://img.shields.io/badge/Anthropic-Claude_API-cc785c.svg)](https://docs.anthropic.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -25,14 +25,36 @@ git clone https://github.com/Shubham-Safaya/productivity-toolkit.git
 cd productivity-toolkit
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -e .
 cp .env.example .env
 # Add your ANTHROPIC_API_KEY to .env
 ```
 
+Installing with `pip install -e .` puts a `toolkit` command on your PATH:
+
+```bash
+toolkit linkedin --start-day 31 --topics "Topic 1,Topic 2"
+toolkit eb1a stats
+```
+
+`python cli.py <command>` works identically without installing.
+
+## Configuration
+
+| Env var | Purpose | Default |
+|---------|---------|---------|
+| `ANTHROPIC_API_KEY` | API key for all AI-powered tools | (required) |
+| `CLAUDE_MODEL` | Model used by every tool — one knob for future model swaps | `claude-fable-5` |
+
+Set both in `.env` (see `.env.example`). When running on Claude Fable 5, requests
+declined by its safety classifiers automatically fall back to Claude Opus 4.8
+within the same API call.
+
 ## Usage
 
-All tools are accessible through the unified CLI or as standalone modules.
+All tools are accessible through the unified CLI or as standalone modules
+(`python -m linkedin_batch.generator ...`). The examples below use
+`python cli.py`; substitute `toolkit` if installed.
 
 ### 1. LinkedIn Batch Generator
 
@@ -137,7 +159,10 @@ Available formats: `linkedin`, `medium`, `youtube`, `instagram`, `twitter_thread
 
 ```
 productivity-toolkit/
-├── cli.py                          # Unified CLI entry point
+├── cli.py                          # Unified CLI entry point (`toolkit <command>`)
+├── toolkit/                        # Shared config + Anthropic client
+│   ├── config.py                   #   CLAUDE_MODEL env var, API key lookup
+│   └── client.py                   #   Prompt caching, structured outputs, error handling
 ├── linkedin_batch/generator.py     # LinkedIn "Day X" batch generator
 ├── outreach_templates/generator.py # Job outreach message generator
 ├── interview_prep/mock_interview.py # Mock PM interview system
@@ -146,13 +171,24 @@ productivity-toolkit/
 ├── medium_drafts/drafter.py        # Medium article draft generator
 ├── financial_review/reviewer.py    # Portfolio review tool
 ├── content_repurpose/repurpose.py  # Content repurposing engine
-├── requirements.txt
+├── tests/test_smoke.py             # Smoke test per subcommand (API mocked)
+├── pyproject.toml
 └── .env.example
 ```
 
+## Tests
+
+```bash
+pip install -e ".[dev]"
+pytest
+```
+
+The suite runs one smoke test per subcommand with the API fully mocked — no
+network access and no API key needed.
+
 ## Requirements
 
-- Python 3.9+
+- Python 3.10+
 - Anthropic API key (for AI-powered features)
 - The EB1A tracker works fully offline (no API needed)
 

@@ -207,7 +207,7 @@ def export_evidence(fmt: str, output_path: str | None = None):
         print(f"Exported to: {out}")
 
 
-def main():
+def main(argv: list[str] | None = None):
     parser = argparse.ArgumentParser(description="EB1A Evidence Tracker")
     subparsers = parser.add_subparsers(dest="command")
 
@@ -231,7 +231,7 @@ def main():
     # stats
     subparsers.add_parser("stats", help="Show coverage statistics")
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.command == "view":
         view_evidence(args.criterion)
