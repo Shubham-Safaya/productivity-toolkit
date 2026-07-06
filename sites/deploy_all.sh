@@ -6,6 +6,7 @@
 set -euo pipefail
 
 OWNER="$(gh api user --jq .login)"
+OWNER_LC="$(printf '%s' "$OWNER" | tr '[:upper:]' '[:lower:]')"
 echo "Deploying as: $OWNER"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SITES=("${@:-kongposh threadpass sundays-with-safaya}")
@@ -14,7 +15,7 @@ SITES=("${@:-kongposh threadpass sundays-with-safaya}")
 deploy_site() {
   local name="$1"
   local src="$SCRIPT_DIR/$name"
-  local url="https://${OWNER,,}.github.io/$name/"
+  local url="https://${OWNER_LC}.github.io/$name/"
   echo ""
   echo "=== $name ==="
 
@@ -83,5 +84,5 @@ done
 echo ""
 echo "All done. Live URLs:"
 for site in ${SITES[@]}; do
-  echo "  https://${OWNER,,}.github.io/$site/"
+  echo "  https://${OWNER_LC}.github.io/$site/"
 done
